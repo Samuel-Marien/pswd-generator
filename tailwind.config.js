@@ -3,7 +3,14 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        cousine: ['Cousine']
+      },
+      width: {
+        550: '550px'
+      }
+    }
   },
   plugins: []
 }

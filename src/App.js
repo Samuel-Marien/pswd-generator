@@ -1,33 +1,118 @@
 import React, { useState } from 'react'
 import ReactSlider from 'react-slider'
+import PropTypes from 'prop-types'
 
-// const number = '0123456789'
-// const lower = 'abcdefghijklmnopqrstuvwxyz'
-// const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-// const sign = '!@#$%^&*()?'
-const chars =
-  '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()?ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+import { AiOutlineCopy } from 'react-icons/ai'
+
+const number = '012345678901234567890123456'
+const lower = 'abcdefghijklmnopqrstuvwxyz'
+const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const symbol = '!@#$%^&*()?!@#$%^&*()?!@#$'
+let chars = ''
+
+const MyCheckBox = (props) => {
+  const { title, checked, onChange } = props
+  return (
+    <div className="mt-2 ">
+      <label className="inline-flex items-center">
+        {title}
+        <input
+          type="checkbox"
+          className="w-6 h-6 text-green-600 border-0 rounded-md focus:ring-0"
+          checked={checked}
+          onChange={onChange}
+        />
+      </label>
+    </div>
+  )
+}
+MyCheckBox.propTypes = {
+  title: PropTypes.string,
+  checked: PropTypes.bool,
+  onChange: PropTypes.func
+}
 
 function App() {
   const [pswd, setPswd] = useState('')
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(8)
+  const [upperChecked, setUpperChecked] = useState(true)
+  const [lowerChecked, setLowerChecked] = useState(true)
+  const [numberChecked, setNumberChecked] = useState(true)
+  const [symbolChecked, setSymbolChecked] = useState(false)
+
+  const fixPswd = (pswd, choiceArray) => {
+    let randomNumber = Math.floor(Math.random() * choiceArray.length)
+    pswd += choiceArray.substring(randomNumber, randomNumber + 1)
+    let tempPswd = pswd.slice(1)
+    pswd = tempPswd
+    return pswd
+  }
 
   const genPassword = (userValue) => {
+    //check user options and add to string
+    if (upperChecked) {
+      chars += upper
+    }
+    if (lowerChecked) {
+      chars += lower
+    }
+    if (symbolChecked) {
+      chars += symbol
+    }
+    if (numberChecked) {
+      chars += number
+    }
+
+    // create pswd with user options
     let password = ''
     for (var i = 0; i <= userValue; i++) {
       let randomNumber = Math.floor(Math.random() * chars.length)
       password += chars.substring(randomNumber, randomNumber + 1)
     }
+
+    // check if one char minimum by option is present in password suggestion
+    if (upperChecked) {
+      if (!/[A-Z]/.test(password)) {
+        password = fixPswd(password, upper)
+      }
+    }
+    if (lowerChecked) {
+      if (!/[a-z]/.test(password)) {
+        password = fixPswd(password, lower)
+      }
+    }
+    if (numberChecked) {
+      if (!/[0-9]/.test(password)) {
+        password = fixPswd(password, number)
+      }
+    }
+    if (symbolChecked) {
+      if (!/[!@#$%^&*()?]/.test(password)) {
+        password = fixPswd(password, symbol)
+      }
+    }
+
+    // set the pswd :)
     setPswd(password)
+
+    // init the chars to empty for next iteration
+    chars = ''
   }
 
   return (
-    <div className="text-center text-3xl mt-24">
+    <div className="border border-pink-500 h-screen bg-black text-slate-700 flex flex-col pt-36 items-center font-cousine">
+      <div className="text-2xl font-bold">Passw0rd Generat0r</div>
+      <div className="mt-8 bg-slate-800 text-3xl text-slate-300 px-10 py-5 flex justify-between w-550">
+        <p>{pswd}</p>
+        <p className="text-xl text-green-400">
+          <AiOutlineCopy />
+        </p>
+      </div>
       <div>
         <ReactSlider
           step={1}
-          min={1}
-          max={20}
+          min={6}
+          max={24}
           className="w-full h-3 pr-2 my-4 bg-gray-200 rounded-md cursor-grab"
           thumbClassName="absolute w-5 h-5 cursor-grab bg-indigo-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 -top-2px"
           value={value}
@@ -36,6 +121,36 @@ function App() {
           }}
         />
         <span>{value}</span>
+        <div className="block border">
+          <MyCheckBox
+            title="Uppers ?"
+            checked={upperChecked}
+            onChange={() => {
+              setUpperChecked(() => (upperChecked ? false : true))
+            }}
+          />
+          <MyCheckBox
+            title="Lowers ?"
+            checked={lowerChecked}
+            onChange={() => {
+              setLowerChecked(() => (lowerChecked ? false : true))
+            }}
+          />
+          <MyCheckBox
+            title="Numbers ?"
+            checked={numberChecked}
+            onChange={() => {
+              setNumberChecked(() => (numberChecked ? false : true))
+            }}
+          />
+          <MyCheckBox
+            title="Symbols ?"
+            checked={symbolChecked}
+            onChange={() => {
+              setSymbolChecked(() => (symbolChecked ? false : true))
+            }}
+          />
+        </div>
 
         <button
           onClick={() => genPassword(value - 1)}
@@ -44,7 +159,6 @@ function App() {
           click to generate
         </button>
       </div>
-      <p className="text-red-500 font-mono font-black text-3xl">{pswd}</p>
     </div>
   )
 }
