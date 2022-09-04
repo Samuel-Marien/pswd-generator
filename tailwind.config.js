@@ -3,6 +3,9 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    letterSpacing: {
+      widest: '.30em'
+    },
     extend: {
       fontFamily: {
         cousine: ['Cousine']

@@ -3,6 +3,7 @@ import ReactSlider from 'react-slider'
 import PropTypes from 'prop-types'
 
 import { AiOutlineCopy } from 'react-icons/ai'
+import { ImMagicWand } from 'react-icons/im'
 
 const number = '012345678901234567890123456'
 const lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -15,13 +16,13 @@ const MyCheckBox = (props) => {
   return (
     <div className="mt-2 ">
       <label className="inline-flex items-center">
-        {title}
         <input
           type="checkbox"
-          className="w-6 h-6 text-green-600 border-0 rounded-md focus:ring-0"
+          className="w-6 h-6 accent-green-400 border-0 rounded-md focus:ring-0 mr-6"
           checked={checked}
           onChange={onChange}
         />
+        {title}
       </label>
     </div>
   )
@@ -37,7 +38,7 @@ function App() {
   const [value, setValue] = useState(8)
   const [upperChecked, setUpperChecked] = useState(true)
   const [lowerChecked, setLowerChecked] = useState(true)
-  const [numberChecked, setNumberChecked] = useState(true)
+  const [numberChecked, setNumberChecked] = useState(false)
   const [symbolChecked, setSymbolChecked] = useState(false)
 
   const fixPswd = (pswd, choiceArray) => {
@@ -100,51 +101,55 @@ function App() {
   }
 
   return (
-    <div className="border border-pink-500 h-screen bg-black text-slate-700 flex flex-col pt-36 items-center font-cousine">
+    <div className="h-screen bg-black text-slate-700 flex flex-col pt-36 items-center font-cousine">
       <div className="text-2xl font-bold">Passw0rd Generat0r</div>
-      <div className="mt-8 bg-slate-800 text-3xl text-slate-300 px-10 py-5 flex justify-between w-550">
-        <p>{pswd}</p>
-        <p className="text-xl text-green-400">
+      <div className="mt-8 bg-slate-800 text-3xl text-slate-300 px-10 py-5 flex justify-between w-550 ">
+        <p className="h-7">{pswd}</p>
+        <p className="text-xl text-green-400 ">
           <AiOutlineCopy />
         </p>
       </div>
-      <div>
+      <div className="mt-6 bg-slate-800  text-slate-300 px-10 py-5  w-550">
+        <div className="flex justify-between">
+          <p>Character Length</p>
+          <p className="text-3xl font-black text-green-400">{value}</p>
+        </div>
         <ReactSlider
           step={1}
           min={6}
           max={24}
-          className="w-full h-3 pr-2 my-4 bg-gray-200 rounded-md cursor-grab"
-          thumbClassName="absolute w-5 h-5 cursor-grab bg-indigo-500 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 -top-2px"
+          className="w-full h-3 pr-2 my-4 bg-slate-900 rounded-md  "
+          thumbClassName=" w-6 h-6 cursor-grab bg-green-500 rounded-full -translate-y-1.5 focus:border-current focus:ring-0"
           value={value}
           onChange={(value) => {
             setValue(value)
           }}
         />
-        <span>{value}</span>
-        <div className="block border">
+
+        <div className="block mt-10">
           <MyCheckBox
-            title="Uppers ?"
+            title="Include uppers case letters ?"
             checked={upperChecked}
             onChange={() => {
               setUpperChecked(() => (upperChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Lowers ?"
+            title="Include lowers case letters ?"
             checked={lowerChecked}
             onChange={() => {
               setLowerChecked(() => (lowerChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Numbers ?"
+            title="Include Numbers ?"
             checked={numberChecked}
             onChange={() => {
               setNumberChecked(() => (numberChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Symbols ?"
+            title="Include Symbols ?"
             checked={symbolChecked}
             onChange={() => {
               setSymbolChecked(() => (symbolChecked ? false : true))
@@ -154,9 +159,14 @@ function App() {
 
         <button
           onClick={() => genPassword(value - 1)}
-          className="px-2 p-y1 rounded border shadow"
+          className="flex justify-center py-4 mt-10 bg-green-400 text-slate-800 font-bold w-full 
+          tracking-widest shadow-md shadow-slate-900 hover:shadow-none hover:bg-slate-700 
+          hover:text-slate-200 hover:rounded-xl transition-all duration-500"
         >
-          click to generate
+          GENERATE
+          <span className="ml-4 animate-pulse">
+            <ImMagicWand />
+          </span>
         </button>
       </div>
     </div>
