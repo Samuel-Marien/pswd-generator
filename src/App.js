@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactSlider from 'react-slider'
 import PropTypes from 'prop-types'
 
@@ -190,7 +189,12 @@ function App() {
       <div className="text-2xl font-bold">Passw0rd Generat0r</div>
       <div className="mt-8 bg-slate-800 text-3xl text-slate-300 px-10 py-5 flex justify-between w-550 ">
         <p className="h-7">{pswd}</p>
-        <p className="text-xl text-green-400 ">
+        <p
+          className="text-xl text-green-400 cursor-pointer hover:scale-125 hover:text-green-200 transition-all duration-300"
+          onClick={() => {
+            navigator.clipboard.writeText(pswd)
+          }}
+        >
           <AiOutlineCopy />
         </p>
       </div>
