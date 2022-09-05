@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import ReactSlider from 'react-slider'
 import PropTypes from 'prop-types'
 
@@ -30,16 +31,31 @@ const MyCheckBox = (props) => {
 MyCheckBox.propTypes = {
   title: PropTypes.string,
   checked: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  onClick: PropTypes.func
+}
+
+const StrengthLevel = (props) => {
+  const { className } = props
+  return (
+    <div
+      className={`${className} border border-slate-300 h-8 w-3 mr-2 transition-all duration-700 `}
+    ></div>
+  )
+}
+StrengthLevel.propTypes = {
+  className: PropTypes.any
 }
 
 function App() {
   const [pswd, setPswd] = useState('')
   const [value, setValue] = useState(8)
-  const [upperChecked, setUpperChecked] = useState(true)
-  const [lowerChecked, setLowerChecked] = useState(true)
+  const [upperChecked, setUpperChecked] = useState(false)
+  const [lowerChecked, setLowerChecked] = useState(false)
   const [numberChecked, setNumberChecked] = useState(false)
   const [symbolChecked, setSymbolChecked] = useState(false)
+  const [levelIndicator, setLevelIndicator] = useState(0)
+  const [strengthText, setStrengthText] = useState('')
 
   const fixPswd = (pswd, choiceArray) => {
     let randomNumber = Math.floor(Math.random() * choiceArray.length)
@@ -48,6 +64,75 @@ function App() {
     pswd = tempPswd
     return pswd
   }
+
+  const counter = (typeChecked) => {
+    try {
+      if (typeChecked) {
+        setLevelIndicator(levelIndicator + 1)
+      } else {
+        if (levelIndicator > 0) setLevelIndicator(levelIndicator - 1)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // check length and options for set strengthLevel
+  useEffect(() => {
+    counter(upperChecked)
+  }, [upperChecked])
+
+  useEffect(() => {
+    counter(lowerChecked)
+  }, [lowerChecked])
+
+  useEffect(() => {
+    counter(numberChecked)
+  }, [numberChecked])
+
+  useEffect(() => {
+    counter(symbolChecked)
+  }, [symbolChecked])
+
+  useEffect(() => {
+    try {
+      if (value >= 12 && value <= 13) {
+        setLevelIndicator(levelIndicator + 1)
+      } else {
+        if (levelIndicator) {
+          setLevelIndicator(levelIndicator - 1)
+        }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }, [value >= 12])
+
+  useEffect(() => {
+    switch (levelIndicator) {
+      case 0:
+        setStrengthText('security')
+        break
+      case 1:
+        setStrengthText('low')
+        break
+      case 2:
+      case 3:
+        setStrengthText('medium')
+        break
+      case 4:
+        setStrengthText('strong')
+        break
+      case 5:
+        setStrengthText('heavy')
+        break
+      default:
+        break
+    }
+  }, [levelIndicator])
+
+  // console.log(levelIndicator)
+  // console.log(strengthText)
 
   const genPassword = (userValue) => {
     //check user options and add to string
@@ -118,14 +203,13 @@ function App() {
           step={1}
           min={6}
           max={24}
-          className="w-full h-3 pr-2 my-4 bg-slate-900 rounded-md  "
-          thumbClassName=" w-6 h-6 cursor-grab bg-green-500 rounded-full -translate-y-1.5 focus:border-current focus:ring-0"
+          className="w-full h-3 pr-2 my-4 bg-slate-900 rounded-md cursor-grab"
+          thumbClassName=" w-6 h-6 cursor-grab bg-green-500 rounded-full -translate-y-1.5 focus:outline-none"
           value={value}
           onChange={(value) => {
             setValue(value)
           }}
         />
-
         <div className="block mt-10">
           <MyCheckBox
             title="Include uppers case letters ?"
@@ -156,18 +240,59 @@ function App() {
             }}
           />
         </div>
-
-        <button
-          onClick={() => genPassword(value - 1)}
-          className="flex justify-center py-4 mt-10 bg-green-400 text-slate-800 font-bold w-full 
+        <div className="p-4 mt-6 bg-black h-16 w-full flex justify-between items-baseline">
+          <p className="pt-1 text-xl text-slate-400 font-bold ">STRENGTH</p>
+          <div className="flex items-center">
+            <p className="uppercase transition-all duration-500 text-xl text-slate-300 mr-4">
+              {strengthText}
+            </p>
+            <div className="flex">
+              <StrengthLevel
+                className={
+                  levelIndicator && `bg-yellow-200 shadow-lg shadow-yellow-200`
+                }
+              />
+              <StrengthLevel
+                className={
+                  levelIndicator >= 2 &&
+                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                }
+              />
+              <StrengthLevel
+                className={
+                  levelIndicator >= 4 &&
+                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                }
+              />
+              <StrengthLevel
+                className={
+                  levelIndicator === 5 &&
+                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                }
+              />
+            </div>
+          </div>
+        </div>
+        {upperChecked || lowerChecked || numberChecked || symbolChecked ? (
+          <button
+            onClick={() => genPassword(value - 1)}
+            className="flex justify-center py-4 mt-10 bg-green-400 text-slate-800 font-bold w-full 
           tracking-widest shadow-md shadow-slate-900 hover:shadow-none hover:bg-slate-700 
           hover:text-slate-200 hover:rounded-xl transition-all duration-500"
-        >
-          GENERATE
-          <span className="ml-4 animate-pulse">
-            <ImMagicWand />
-          </span>
-        </button>
+          >
+            GENERATE
+            <span className="ml-4 animate-pulse hover:scale-150">
+              <ImMagicWand />
+            </span>
+          </button>
+        ) : (
+          <button
+            disabled
+            className="flex justify-center py-4 mt-10 bg-green-400 text-slate-900 font-bold w-full transition-all duration-500 opacity-50"
+          >
+            Choose your option(s)...
+          </button>
+        )}
       </div>
     </div>
   )
