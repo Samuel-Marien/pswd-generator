@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import ReactSlider from 'react-slider'
-import PropTypes from 'prop-types'
+
+import MyCheckBox from './components/MyCheckBox'
+import StrengthLevel from './components/StrengthLevel'
 
 import { AiOutlineCopy } from 'react-icons/ai'
 import { ImMagicWand } from 'react-icons/im'
@@ -11,46 +13,11 @@ const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const symbol = '!@#$%^&*()?!@#$%^&*()?!@#$'
 let chars = ''
 
-const MyCheckBox = (props) => {
-  const { title, checked, onChange } = props
-  return (
-    <div className="mt-2 ">
-      <label className="inline-flex items-center">
-        <input
-          type="checkbox"
-          className="w-6 h-6 accent-green-400 border-0 rounded-md focus:ring-0 mr-6"
-          checked={checked}
-          onChange={onChange}
-        />
-        {title}
-      </label>
-    </div>
-  )
-}
-MyCheckBox.propTypes = {
-  title: PropTypes.string,
-  checked: PropTypes.bool,
-  onChange: PropTypes.func,
-  onClick: PropTypes.func
-}
-
-const StrengthLevel = (props) => {
-  const { className } = props
-  return (
-    <div
-      className={`${className} border border-slate-300 h-8 w-3 mr-2 transition-all duration-700 `}
-    ></div>
-  )
-}
-StrengthLevel.propTypes = {
-  className: PropTypes.any
-}
-
 function App() {
   const [pswd, setPswd] = useState('')
   const [value, setValue] = useState(8)
   const [upperChecked, setUpperChecked] = useState(false)
-  const [lowerChecked, setLowerChecked] = useState(false)
+  const [lowerChecked, setLowerChecked] = useState(true)
   const [numberChecked, setNumberChecked] = useState(false)
   const [symbolChecked, setSymbolChecked] = useState(false)
   const [levelIndicator, setLevelIndicator] = useState(0)
@@ -110,7 +77,7 @@ function App() {
   useEffect(() => {
     switch (levelIndicator) {
       case 0:
-        setStrengthText('security')
+        setStrengthText('level')
         break
       case 1:
         setStrengthText('low')
@@ -185,9 +152,9 @@ function App() {
   }
 
   return (
-    <div className="h-screen bg-black text-slate-700 flex flex-col pt-36 items-center font-cousine">
+    <div className="h-screen bg-black text-slate-700 flex flex-col pt-5 mysm:pt-36 items-center font-cousine">
       <div className="text-2xl font-bold">Passw0rd Generat0r</div>
-      <div className="mt-8 bg-slate-800 text-3xl text-slate-300 px-10 py-5 flex justify-between w-550 ">
+      <div className="mt-8 bg-slate-800 text-base mysm:text-3xl text-slate-300 px-5 py-2 mysm:px-10 mysm:py-5 flex justify-between  mysm:w-550 w-80">
         <p className="h-7">{pswd}</p>
         <p
           className="text-xl text-green-400 cursor-pointer hover:scale-125 hover:text-green-200 transition-all duration-300"
@@ -198,10 +165,12 @@ function App() {
           <AiOutlineCopy />
         </p>
       </div>
-      <div className="mt-6 bg-slate-800  text-slate-300 px-10 py-5  w-550">
-        <div className="flex justify-between">
+      <div className="mt-6 bg-slate-800  text-slate-300 px-5 py-2 mysm:px-10 mysm:py-5 mysm:w-550 w-80">
+        <div className="flex justify-between items-center">
           <p>Character Length</p>
-          <p className="text-3xl font-black text-green-400">{value}</p>
+          <p className="text-2xl mysm:text-3xl font-black text-green-400">
+            {value}
+          </p>
         </div>
         <ReactSlider
           step={1}
@@ -216,14 +185,14 @@ function App() {
         />
         <div className="block mt-10">
           <MyCheckBox
-            title="Include uppers case letters ?"
+            title="Include uppers case ?"
             checked={upperChecked}
             onChange={() => {
               setUpperChecked(() => (upperChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Include lowers case letters ?"
+            title="Include lowers case ?"
             checked={lowerChecked}
             onChange={() => {
               setLowerChecked(() => (lowerChecked ? false : true))
@@ -245,33 +214,36 @@ function App() {
           />
         </div>
         <div className="p-4 mt-6 bg-black h-16 w-full flex justify-between items-baseline">
-          <p className="pt-1 text-xl text-slate-400 font-bold ">STRENGTH</p>
+          <p className="pt-1 mysm:text-xl text-slate-400 font-bold ">
+            STRENGTH
+          </p>
           <div className="flex items-center">
-            <p className="uppercase transition-all duration-500 text-xl text-slate-300 mr-4">
+            <p className="uppercase transition-all duration-500  mysm:text-xl text-slate-300 mr-4">
               {strengthText}
             </p>
             <div className="flex">
               <StrengthLevel
                 className={
-                  levelIndicator && `bg-yellow-200 shadow-lg shadow-yellow-200`
+                  levelIndicator &&
+                  `bg-amber-200 shadow-lg shadow-amber-200 border-none `
                 }
               />
               <StrengthLevel
                 className={
                   levelIndicator >= 2 &&
-                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                  `bg-amber-400 shadow-lg shadow-amber-400 border-none `
                 }
               />
               <StrengthLevel
                 className={
                   levelIndicator >= 4 &&
-                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                  `bg-orange-600 shadow-lg shadow-orange-600 border-none `
                 }
               />
               <StrengthLevel
                 className={
                   levelIndicator === 5 &&
-                  `bg-yellow-200 shadow-lg shadow-yellow-200`
+                  `bg-red-800 shadow-lg shadow-red-700 border-none `
                 }
               />
             </div>
@@ -280,8 +252,8 @@ function App() {
         {upperChecked || lowerChecked || numberChecked || symbolChecked ? (
           <button
             onClick={() => genPassword(value - 1)}
-            className="flex justify-center py-4 mt-10 bg-green-400 text-slate-800 font-bold w-full 
-          tracking-widest shadow-md shadow-slate-900 hover:shadow-none hover:bg-slate-700 
+            className="flex justify-center  mt-6 mysm:mb-0 mb-5 py-4 mysm:mt-10 bg-green-400 text-slate-800 font-bold w-full 
+           mysm:tracking-widest shadow-md shadow-slate-900 hover:shadow-none hover:bg-slate-700 
           hover:text-slate-200 hover:rounded-xl transition-all duration-500"
           >
             GENERATE
@@ -292,7 +264,7 @@ function App() {
         ) : (
           <button
             disabled
-            className="flex justify-center py-4 mt-10 bg-green-400 text-slate-900 font-bold w-full transition-all duration-500 opacity-50"
+            className=" mysm:mb-0 mb-5 flex justify-center py-4 mt-6 mysm:mt-10 bg-green-400 text-slate-900 font-bold w-full transition-all duration-500 opacity-50"
           >
             Choose your option(s)...
           </button>

@@ -13,6 +13,10 @@ module.exports = {
       width: {
         550: '550px'
       }
+    },
+    screens: {
+      mysm: '550px'
+      // => @media (min-width: 550px) { ... }
     }
   },
   plugins: []
