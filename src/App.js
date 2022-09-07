@@ -97,9 +97,6 @@ function App() {
     }
   }, [levelIndicator])
 
-  // console.log(levelIndicator)
-  // console.log(strengthText)
-
   const genPassword = (userValue) => {
     //check user options and add to string
     if (upperChecked) {
@@ -156,6 +153,7 @@ function App() {
       <div className="text-2xl font-bold">Passw0rd Generat0r</div>
       <div className="mt-8 bg-slate-800 text-base mysm:text-3xl text-slate-300 px-5 py-2 mysm:px-10 mysm:py-5 flex justify-between  mysm:w-550 w-80">
         <p className="h-7">{pswd}</p>
+
         <p
           className="text-xl text-green-400 cursor-pointer hover:scale-125 hover:text-green-200 transition-all duration-300"
           onClick={() => {
@@ -185,28 +183,28 @@ function App() {
         />
         <div className="block mt-10">
           <MyCheckBox
-            title="Include uppers case ?"
+            title="Include upper-cases ?"
             checked={upperChecked}
             onChange={() => {
               setUpperChecked(() => (upperChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Include lowers case ?"
+            title="Include lower-cases ?"
             checked={lowerChecked}
             onChange={() => {
               setLowerChecked(() => (lowerChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Include Numbers ?"
+            title="Include numbers ?"
             checked={numberChecked}
             onChange={() => {
               setNumberChecked(() => (numberChecked ? false : true))
             }}
           />
           <MyCheckBox
-            title="Include Symbols ?"
+            title="Include symbols ?"
             checked={symbolChecked}
             onChange={() => {
               setSymbolChecked(() => (symbolChecked ? false : true))

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const MyCheckBox = (props) => {
   const { title, checked, onChange } = props
   return (
-    <div className="mt-2 ">
+    <div className="mt-2">
       <label className="inline-flex items-center">
         <input
           type="checkbox"
